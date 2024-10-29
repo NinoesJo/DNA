@@ -16,14 +16,13 @@ Here are the major parts of the assignment.
 	1. You'll create an inner `Node` class with instance variables `myFirst` and `myLast` and you'll then implement all the methods in the `IDnaStrand` interface, _**testing them using supplied JUnit tests.**_ 
 	2. When you create the class and edit it so that it implements IDnaStrand, VSCode can fill in stub methods that you will implement. There are two constructors and several methods. You should read the comments in the `IDnaStrand` interface and use the existing implementations `StringStrand` and `StringBuilderStrand` to understand what these methods do. 
 3. In [Part 3](#part-3-analysis-and-more-benchmarking) Rerun the benchmarking program `DNABenchmark` with the newly coded `LinkStrand` class - note the efficiency and memory of the program compared to when you ran the program with StringStrand and StringBuilderStrand.
-4. You'll make changes to `DNABenchmark` to run more benchmark code to answer questions in the analysis.
+4. You'll make changes to `DNABenchmark` to run more benchmark code.
 
 ## Outline
 - [Background and Introduction](#project-background-and-introduction)
 - [Part 1: Running DNABenchmark, Profiling, Analysis](#part-1-running-dnabenchmark-profiling-analysis)
 - [Part 2: Programming](#part-2-programming-linkstrand)
 - [Part 3: More Benchmarking and Analysis](#part-3-more-benchmarking-and-analysis)
-- [Submitting and Grading](#submitting-and-grading)
 
 ## Project Background and Introduction
 
@@ -98,55 +97,5 @@ In [Part 1](#part-1-running-dnabenchmark-profiling-analysis) you benchmarked the
 Now that you have completed your implementation of `LinkStrand`, you should run the  `DNABenchmark` using the `LinkStrand` implementation of the `IDnaStrand` interface. Again use the `ecoli_small.txt` file. Remember to save your results. Once you finish, you should have a total of 3 benchmark results: one for each of the three implementations (`StringStrand`, `StringBuilderStrand`, and `LinkStrand`).
 
 Recall that `DNABenchmark` simulates a splicing experiment with DNA data. The complexity of the `StringStrand` and `StringBuilderStrand` implementations was discussed earlier in [Part 1](#part-1-running-dnabenchmark-profiling-analysis). Expand below for some discussion of the complexity using the `LinkStrand` implementation. **See [the details document](docs/details.md) for a detailed explanation of the complexity** of the `LinkStrand` implementation of `cutAndSplice`. 
-
-
-### Analysis Questions
-
-Once you have completed benchmarking, answer the following analysis questions. **Include your answers in the PDF you submit to the analysis assignment for Project 3 in Gradescope.** You can and should complete most of these questions even if you are unable to complete the code for the `LinkStrand` class.
-
-The following questions refer to the parameters:
-- N: the size of the original dna strand,
-- b: the number of breaks / occurrences of the `enzyme`, and 
-- S: the size of the `splicee`.  
-
-Several questions refer to the runtime complexity of the `cutAndSplice` method. You may assume the following about this method:
-- The loop that searches for occurrences of `enzyme` using `indexOf` is O(N) for a strand with N nucleotides/length == N.
-- The size of the enzyme is negligibly small, i.e., you can ignore subtracting the size of the enzymes from the length/runtime of the results.
-- The fragments of the original strand between each added splicee are all approximately the same length, roughly N/b.
-
-Note that given these assumptions the original strand has length N, and the newly constructed strand has length N + bS, since each of b neglibly small occurrences of `enzyme` are replaced by a `splicee` whose size is S. Simply appending/concatenating a String of size S to a `StringBuilder` b times will take runtime O(bS) given what we've discussed in class about how StringBuilder works.  However, as we discussed in class, appending a String S to a `String` b times results in creating Strings S, SS, SSS, SSS, and so on (ignoring what comes between the splicees for now). This happens b times, so the last String has b occurrences of S and the total runtime is SSS..S (b times) so the total time to create all strings is (1+2+...+b)S which is O(b<sup>2</sup>S). When `LinkStrand` is used, be attentative to the diagram **at the end of [the details document](docs/details.md) document for information** that will help you reason about the runtime and the storage used.
-
-**Question 1:** What is the big O asymptotic runtime complexity of `cutAndSplice` when using `StringStrand`, in terms of N, b, and S? Justify your answer in theory, referencing the implementation, and empirically, by reporting and discussing your results from running `DNABenchmark`. Do you empirical results match your theoretical expectations? Briefly explain.
-
-**Question 2:** What is the big O asymptotic runtime complexity of `cutAndSplice` when using `StringBuilderStrand`, in terms of N, b, and S? Justify your answer in theory, referencing the implementation, and empirically, by reporting and discussing your results from running `DNABenchmark`. Do your empirical results match your theoretical expectations? Briefly explain.
-
-**Question 3:** If each character of a `String` takes 1 byte of memory to store, about how much total memory is necessary to store the result of a `cutAndSplice` operation on a `StringStrand` object? Express your answer in terms of N, b, and S. Would the result take more or less memory if using a `StringBuilderStrand` object? Briefly explain.
-
-**Question 4:** What is the big O asymptotic runtime complexity of `cutAndSplice` when using `LinkStrand` in terms of N, b, and S? Justify your answer in theory, referencing the implementation, and empirically, by reporting your results from running `DNABenchmark`. Do you empirical results match your theoretical expectations? Briefly explain.
-
-**Question 5:** If each character of a `String` takes 1 byte of memory to store, and each reference to a node takes 8 bytes of memory to store, about about how much total memory is necessary to store the result of a `cutAndSplice` operation on a `LinkStrand` object? Express your answer in terms of N, b, and S. Briefly explain your answer, refereincing the implementation of `LinkStrand`. 
-
-**Question 6:** Read [this obituary of Kary Mullis, the inventor of PCR](https://cen.acs.org/people/obituaries/Kary-Mullis-dies-age-74/97/web/2019/08). Write four-six sentences/a paragraph reacting to both his accomplishments and his arguably outlandish views and practices.
-
-## Submitting and Grading 
-
-You will submit the assignment on Gradescope. Please take note that changes/commits on GitLab are NOT automatically synced to Gradescope. You are welcome to submit as many times as you like, only the most recent submission will count for a grade.
-
-Don't forget to upload a PDF for the analysis part of this assignment and mark where you answer each question. This is a separate submission in Gradescope.
-
-### Grading
-
-
-| Points | Grading Criteria |
-| ------ | ------ |
-| 16 | Code for LinkStrand. This includes 4 for correct and efficient implementation of .charAt method, as well as 2 for API consistency. |
-| 12 | Analysis questions answered. UTAs will grade and comment on this.  |
-| 2 | video of starting coding (for Part II)|
-
-We will map total points you earn to scores as follows. For example, 24 is an A- and 30 is an A+.
-- 24-30:  A
-- 18-23:  B
-- 12-17:  C
-- 6-11:  D
 
 
